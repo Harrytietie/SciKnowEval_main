@@ -1,0 +1,14 @@
+__pycache__/
+.idea/
+.ipynb_checkpoints/
+
+# data ignore
+data/pdfs/*
+!data/pdfs/README.md
+data/extracted_text/*.txt
+extract_pdfs/
+prepare/
+
+test.*
+results/
+*.env

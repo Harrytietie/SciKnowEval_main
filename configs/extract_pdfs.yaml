@@ -1,0 +1,6 @@
+task: extract_pdfs
+gpus: [0]
+exp_name: 'pypdf2'
+
+data_dir:  /data/wangweijie/SciKnowEval/data/pdfs
+result_dir: /data/wangweijie/SciKnowEval/data

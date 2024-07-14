@@ -1,0 +1,9 @@
+task: generate_answer
+gpus: [0]
+exp_name: 'gpt-4-turbo-preview'
+
+data_dir:  /data/wangweijie/SciKnowEval/data/questions/Literature_Reading
+result_dir: /data/wangweijie/SciKnowEval/results
+
+model: gpt-4-turbo-preview
+api_base: https://api.ai-gaochao.cn/v1

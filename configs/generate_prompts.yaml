@@ -1,0 +1,16 @@
+task: generate_prompts
+gpus: [0]
+exp_name: 'test5'
+
+result_dir: /data/wangweijie/SciKnowEval/results
+text_dir: /data/wangweijie/SciKnowEval/data/extract_pdfs/pypdf2
+
+model: gpt-4-turbo
+api_base: https://api.ai-gaochao.cn/v1
+max_tokens: 4096
+temperature: 0.7
+top_p: 0.9
+api_batch: 100
+
+num: 2000
+length: 1000
