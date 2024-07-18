@@ -1,9 +1,9 @@
 task: generate_prompts
 gpus: [0]
-exp_name: 'test5'
+exp_name: 'test1'
 
 result_dir: E:/SciKnowEval_main/results
-text_dir: E:/SciKnowEval_main/data/extract_pdfs/pypdf2
+text_dir: E:/SciKnowEval_main/results/extract_pdfs/pypdf1
 
 model: gpt-3.5-turbo
 api_base: https://api.ai-gaochao.cn/v1
