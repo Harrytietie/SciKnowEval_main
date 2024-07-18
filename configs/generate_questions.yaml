@@ -3,8 +3,8 @@ gpus: [0]
 exp_name: 'test3'
 
 #data_dir:  E:/SciKnowEval-main/data/pdfs
-result_dir: E:/SciKnowEval-main/results
-text_dir: E:/SciKnowEval-main/results/generate_prompts/test5
+result_dir: E:/SciKnowEval_main/results
+text_dir: E:/SciKnowEval_main/results/generate_prompts/test5
 
 model: gpt-3.5-turbo
 api_base: https://api.ai-gaochao.cn/v1

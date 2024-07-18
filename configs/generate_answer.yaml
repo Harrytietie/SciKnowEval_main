@@ -2,8 +2,8 @@ task: generate_answer
 gpus: [0]
 exp_name: 'gpt-3.5-turbo'
 
-data_dir:  E:/SciKnowEval-main/data/questions/base
-result_dir: E:/SciKnowEval-main/results
+data_dir:  E:/SciKnowEval_main/data/questions/base
+result_dir: E:/SciKnowEval_main/results
 
 model: gpt-3.5-turbo
 api_base: https://api.ai-gaochao.cn/v1
