@@ -6,7 +6,6 @@ from lib.generate.generate_base import generate_base_questions
 from lib.generate.generate_chem import generate_chem_questions
 from lib.utils.json_utils import read_jsonl, read_in_folder
 
-
 if __name__ == '__main__':
     if not os.path.exists(cfg.result_dir):
         os.makedirs(cfg.result_dir)
@@ -33,14 +32,14 @@ if __name__ == '__main__':
     # print("Token num for chemistry questions: ", token_num)
 
 # V2
-#     for contents_jsonl in contents_flat:
-#         print("text_name", text_name)
-#         base_path = os.path.join(cfg.result_dir, "Base")
-#         contents_take = [
-#             value["prompt"] for value in contents_jsonl
-#         ]
-#         token_num += generate_base_questions(contents_take, base_path)
-#         print("Token num for", text_name, ":", token_num)
+    #for contents_jsonl in contents_flat:
+    #     print("text_name", text_name)
+    #     base_path = os.path.join(cfg.result_dir, "Base")
+    #     contents_take = [
+    #         value["prompt"] for value in contents_jsonl
+    #     ]
+    #     token_num += generate_base_questions(contents_take, base_path)
+    #     print("Token num for", text_name, ":", token_num)
 
 # V1
     # for text_path in os.listdir(cfg.text_dir):

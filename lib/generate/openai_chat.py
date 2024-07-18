@@ -1,10 +1,14 @@
 # the async version is adapted from https://gist.github.com/neubig/80de662fb3e225c18172ec218be4917a
 
 import os
+
+import httpx
 import openai
+from openai import OpenAI
 import ast
 import asyncio
-from typing import List
+from openai import AsyncOpenAI
+from typing import List, Tuple, Any
 import tiktoken
 from tqdm import tqdm
 
@@ -13,10 +17,10 @@ class OpenAIChat():
     # more details on: https://platform.openai.com/docs/api-reference/chat
     def __init__(
             self,
-            model_name='gpt-4-turbo',
+            model_name='gpt-3.5-turbo',
             max_tokens=2500,
             temperature=0.5,
-            top_p=1,
+            top_p=1.0,
             request_timeout=180,
             stop=None,
             response_format='text',  # text or json_object
@@ -29,7 +33,7 @@ class OpenAIChat():
             'max_tokens': max_tokens,
             'temperature': temperature,
             'top_p': top_p,
-            'request_timeout': request_timeout,
+            'timeout': request_timeout,
             'stop': stop,
             'response_format': response_format,
             'logprobs': logprobs,
@@ -37,73 +41,91 @@ class OpenAIChat():
             'sample_n': n,
         }
         if "gpt" in model_name or 'embedding' in model_name:
-            openai.api_key = os.getenv("OPENAI_API_KEY")
-            openai.api_base = "https://api.ai-gaochao.cn/v1"
+            # openai.api_key = os.getenv("OPENAI_API_KEY")
+            self.client = OpenAI(
+                api_key = os.environ['OPENAI_API_KEY'],
+                base_url = "https://api.ai-gaochao.cn/v1"
+            )
         else:
-            openai.api_key = "EMPTY"
-            openai.api_base = "http://127.0.0.1:8333/v1"
+            # openai.api_key = "EMPTY"
+            self.client = OpenAI(
+                api_key = "EMPTY",
+                base_url = "http://127.0.0.1:8333/v1"
+            )
+
 
     async def dispatch_openai_requests(
             self,
             messages_list,
-    ) -> List[str]:
+    ) -> tuple[Any]:
         """Dispatches requests to OpenAI API asynchronously.
-        
+
         Args:
             messages_list: List of messages to be sent to OpenAI ChatCompletion API.
         Returns:
             List of responses from OpenAI API.
         """
-
         async def _request_with_retry(messages, retry=3):
+            client = AsyncOpenAI(
+                base_url="https://api.ai-gaochao.cn/v1",  # 替换为你的 base_url
+                api_key=os.environ.get("OPENAI_API_KEY")  # 替换为你的 API 密钥
+            )
             for try_i in range(retry):
                 try:
                     # for text embedding models
                     if "embedding" in self.config['model_name']:
-                        response = await openai.Embedding.acreate(
+                        response = await client.embeddings.create(
+                        #response = await openai.Embedding.acreate(
                             model=self.config['model_name'],
                             input=messages,
                         )
                     else:
                         # for chat models
-                        response = await openai.ChatCompletion.acreate(
+                        response = await client.chat.completions.create(
+                        #response = await openai.ChatCompletion.acreate(
                             model=self.config['model_name'],
                             response_format={'type': self.config['response_format']},
                             messages=messages,
                             max_tokens=self.config['max_tokens'],
                             temperature=self.config['temperature'],
                             top_p=self.config['top_p'],
-                            request_timeout=self.config['request_timeout'],
+                            timeout=self.config['timeout'],
                             stop=self.config['stop'],
                             logprobs=self.config['logprobs'],
                             top_logprobs=self.config['top_logprobs'],
                             n=self.config['sample_n'],
                         )
-
                     return response
 
-                except openai.error.InvalidRequestError as e:
+                except openai.BadRequestError as e:
+                #except openai.error.InvalidRequestError as e:
                     print(e)
-                    print(f'Retry {try_i + 1} Invalid request error, waiting for 3 second...')
+                    print(f'Retry {try_i + 1} Bad request error, waiting for 3 second...')
                     await asyncio.sleep(3)
-                except openai.error.RateLimitError:
+                except openai.RateLimitError:
+                #except openai.error.RateLimitError:
                     print(f'Retry {try_i + 1} Rate limit error, waiting for 40 second...')
                     await asyncio.sleep(40)
-                except openai.error.APIError:
-                    print(f'Retry {try_i + 1} API error, waiting for 5 second...')
-                    await asyncio.sleep(5)
-                except openai.error.AuthenticationError as e:
-                    print(e)
-                    print(f'Retry {try_i + 1} Authentication error, waiting for 10 second...')
-                    await asyncio.sleep(10)
-                except openai.error.Timeout:
+                except openai.APITimeoutError:
+                #except openai.error.Timeout:
                     print(f'Retry {try_i + 1} Timeout error, waiting for 10 second...')
                     await asyncio.sleep(10)
-                except openai.error.APIConnectionError as e:
+                except openai.APIConnectionError as e:
+                #except openai.error.APIConnectionError as e:
                     print(e)
                     print(f'Retry {try_i + 1} API connection error, waiting for 10 second...')
                     await asyncio.sleep(10)
-                except openai.error.ServiceUnavailableError:
+                except openai.APIError:
+                #except openai.error.APIError:
+                    print(f'Retry {try_i + 1} API error, waiting for 5 second...')
+                    await asyncio.sleep(5)
+                except openai.AuthenticationError as e:
+                #except openai.error.AuthenticationError as e:
+                    print(e)
+                    print(f'Retry {try_i + 1} Authentication error, waiting for 10 second...')
+                    await asyncio.sleep(10)
+                except openai.InternalServerError:
+                #except openai.error.ServiceUnavailableError:
                     print(f'Retry {try_i + 1} Service unavailable error, waiting for 3 second...')
                     await asyncio.sleep(3)
             return None
@@ -112,8 +134,8 @@ class OpenAIChat():
             _request_with_retry(messages)
             for messages in messages_list
         ]
-
-        return await asyncio.gather(*async_responses)
+        results = await asyncio.gather(*async_responses)
+        return results
 
     async def async_run(self, messages_list, expected_type):
         retry = 10
@@ -129,17 +151,22 @@ class OpenAIChat():
             )
 
             if "embedding" in self.config['model_name']:
-                preds = [prediction['data'][0]['embedding'] if prediction is not None else None for prediction in
+                #preds = [prediction['data'][0]['embedding'] if prediction is not None else None for prediction in
+                #         predictions]
+                preds = [prediction.data[0].embedding if prediction is not None else None for prediction in
                          predictions]
             else:
                 if self.config['logprobs'] == False:
-                    preds = [prediction['choices'][0]['message']['content'] if prediction is not None else None for
+                    #preds = [prediction['choices'][0]['message']['content'] if prediction is not None else None for
+                    #         prediction in predictions]
+                    preds = [prediction.choices[0].message.content if prediction is not None else None for
                              prediction in predictions]
                 else:
                     preds = [
                         [
-                            prediction['choices'][0]['message']['content'],
-                            [d['logprob'] for d in prediction['choices'][0]['logprobs']['content']]
+                            #prediction['choices'][0]['message']['content'],
+                            prediction.choices[0].message.content,
+                            [d['logprob'] for d in prediction.choices[0].logprobs.content]
                         ] if prediction is not None else None for prediction in predictions
                     ]
 
@@ -194,11 +221,12 @@ def segment_paper_into_paragraphs(corpus_text, max_tokens=2048):
 
 if __name__ == "__main__":
 
-    chat = OpenAIChat(model_name='gpt-3.5-turbo-0125', max_tokens=4096, temperature=0.7, top_p=0.90)
+    chat = OpenAIChat(model_name='gpt-3.5-turbo-0125', max_tokens=4096, temperature=0.7, top_p=0.9)
     token_num = calculate_num_tokens("show either 'ab' or '['a']'. Do not do anything else.")
     print("token_num: ", token_num)
-
-    predictions = asyncio.run(chat.async_run(
+    loop = asyncio.get_event_loop()
+    # predictions = asyncio.run(chat.async_run(
+    predictions = loop.run_until_complete(chat.async_run(
         messages_list=[
             [
                 {

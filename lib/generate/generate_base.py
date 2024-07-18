@@ -22,14 +22,19 @@ def generate_base_questions(contents: list[str], output_path: str) -> int:
             message = [{"role": "system", "content": sys_prompt},
                        {"role": "user", "content": content}]
             messages.append(message)
-
         batch_size = cfg.api_batch
         total_len = range(0, len(messages), batch_size)
         for index in tqdm(total_len, total=len(total_len)):
-            responses_index = asyncio.run(chat.async_run(
+            loop = asyncio.get_event_loop()
+            responses_index = loop.run_until_complete(chat.async_run(
                 messages_list=messages[index:index + batch_size],
                 expected_type=List
             ))
+
+            #responses_index = asyncio.run(chat.async_run(
+            #    messages_list=messages[index:index + batch_size],
+            #    expected_type=List
+            #))
 
             for i in range(len(responses_index)):
                 try:
@@ -145,22 +150,22 @@ def generate_base_questions(contents: list[str], output_path: str) -> int:
 
     # chat_fn = OpenAIChatCompletionFnWithPDF(
     #     model=cfg.model,
-    #     api_base=cfg.api_base,
+    #     api_base=cfg.api_base
     # )
     chat = OpenAIChat(model_name=cfg.model, max_tokens=cfg.max_tokens, temperature=cfg.temperature, top_p=cfg.top_p)
     if not os.path.exists(output_path):
         os.makedirs(output_path)
     token_num = 0
     detailed_path = os.path.join(output_path, "detailed_understanding.jsonl")
-    detailed_contents = random.sample(contents, cfg.base.detailed)
+    detailed_contents = random.sample(contents, 1500)
     token_num += generate_detailed(detailed_contents, detailed_path)
     hypothesis_path = os.path.join(output_path, "hypothesis_verification.jsonl")
-    hypothesis_contents = random.sample(contents, cfg.base.hypothesis)
+    hypothesis_contents = random.sample(contents, 1200)
     token_num += generate_hypothesis(hypothesis_contents, hypothesis_path)
     reason_path = os.path.join(output_path, "reasoning_and_interpretation.jsonl")
-    reason_contents = random.sample(contents, cfg.base.reasoning)
+    reason_contents = random.sample(contents, 1200)
     token_num += generate_reason(reason_contents, reason_path)
     summary_path = os.path.join(output_path, "text_summary.jsonl")
-    summary_contents = random.sample(contents, cfg.base.summary)
+    summary_contents = random.sample(contents, 2000)
     token_num += generate_summary(summary_contents, summary_path)
     return token_num

@@ -2,11 +2,11 @@ task: generate_questions
 gpus: [0]
 exp_name: 'test3'
 
-# data_dir:  /data/wangweijie/SciKnowEval/data/pdfs
-result_dir: /data/wangweijie/SciKnowEval/results
-text_dir: /data/wangweijie/SciKnowEval/results/generate_prompts/test5
+#data_dir:  E:/SciKnowEval-main/data/pdfs
+result_dir: E:/SciKnowEval-main/results
+text_dir: E:/SciKnowEval-main/results/generate_prompts/test5
 
-model: gpt-4-turbo
+model: gpt-3.5-turbo
 api_base: https://api.ai-gaochao.cn/v1
 max_tokens: 4096
 temperature: 0.7

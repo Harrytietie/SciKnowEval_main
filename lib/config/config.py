@@ -4,10 +4,7 @@ import os
 import numpy as np
 from . import yacs
 
-
 cfg = CN()
-
-cfg.data_dir = 'data/pdfs'
 
 # module
 cfg.dataset_module = 'lib.datasets'
@@ -24,7 +21,8 @@ cfg.task = 'hello'
 cfg.gpus = list(range(4))
 
 # result
-cfg.result_dir = 'data/result'
+cfg.result_dir = 'E:/SciKnowEval-main/results'
+
 
 def parse_cfg(cfg, args):
     if len(cfg.task) == 0:

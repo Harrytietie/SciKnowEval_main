@@ -4,6 +4,7 @@ from typing import Any, Optional, Union
 import asyncio
 
 from openai import OpenAI
+import openai
 
 from evals.api import CompletionFn, CompletionResult
 from evals.base import CompletionFnSpec
