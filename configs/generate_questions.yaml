@@ -1,10 +1,10 @@
 task: generate_questions
 gpus: [0]
-exp_name: 'test3'
+exp_name: 'test1'
 
 #data_dir:  E:/SciKnowEval-main/data/pdfs
 result_dir: E:/SciKnowEval_main/results
-text_dir: E:/SciKnowEval_main/results/generate_prompts/test5
+text_dir: E:/SciKnowEval_main/results/generate_prompts/test1
 
 model: gpt-3.5-turbo
 api_base: https://api.ai-gaochao.cn/v1
@@ -17,10 +17,10 @@ num: 10
 length: 1000
 
 base:
-  detailed: 1500
-  hypothesis: 1200
-  reasoning: 1200
-  summary: 2000
+  detailed: 5
+  hypothesis: 5
+  reasoning: 5
+  summary: 5
 
 chem:
   compound: 700

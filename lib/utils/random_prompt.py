@@ -30,7 +30,7 @@ def get_prompt(text_path: str, num: int, length: int, pdf_path: str, add_page_nu
     chat = OpenAIChat(model_name=cfg.model, max_tokens=cfg.max_tokens, temperature=cfg.temperature, top_p=cfg.top_p)
 
     if text_path:
-        with open(text_path, 'r') as f:
+        with open(text_path, 'r', encoding='utf-8') as f:
             texts = f.readlines()
     elif pdf_path:
         texts = extract_and_store_nougat(pdf_path, cfg.text_dir)

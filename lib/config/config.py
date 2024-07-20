@@ -24,6 +24,7 @@ cfg.gpus = list(range(4))
 cfg.result_dir = 'E:/SciKnowEval-main/results'
 
 
+
 def parse_cfg(cfg, args):
     if len(cfg.task) == 0:
         raise ValueError('task must be specified')

@@ -3,7 +3,6 @@
 import PyPDF2
 import os
 from tqdm import tqdm
-import chardet
 
 
 def extract_text(pdf_path, add_page_num: bool = False) -> list[str]:
@@ -17,7 +16,6 @@ def extract_text(pdf_path, add_page_num: bool = False) -> list[str]:
         texts: A list of strings, where each string is the text from a page.
     """
     texts = []
-    #.read().decode(encoding='utf-8')
     with open(pdf_path, 'rb') as file:
         reader = PyPDF2.PdfReader(file)
         print("Extracting text from PDF ", pdf_path)
@@ -46,7 +44,7 @@ def extract_and_store_text(pdf_path, output_path, add_page_num: bool = False) ->
         return
     print("Writing text to ", text_path)
     texts = extract_text(pdf_path, add_page_num)
-    with open(text_path, 'w') as file:
+    with open(text_path, 'w', encoding='utf-8') as file:
         file.writelines(texts)
 
 def extract_and_store_nougat(input_path, output_path) -> str:

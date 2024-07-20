@@ -3,7 +3,7 @@ import os
 from lib.config import cfg
 from lib.generate.generate_base import generate_base_questions
 # from lib.generate.generate_biology import generate_biology_questions
-from lib.generate.generate_chem import generate_chem_questions
+# from lib.generate.generate_chem import generate_chem_questions
 from lib.utils.json_utils import read_jsonl, read_in_folder
 
 if __name__ == '__main__':

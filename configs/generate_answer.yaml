@@ -1,8 +1,8 @@
 task: generate_answer
 gpus: [0]
-exp_name: 'gpt-3.5-turbo'
+exp_name: 'gpt-3.5-turbo-test1'
 
-data_dir:  E:/SciKnowEval_main/data/questions/base
+data_dir:  E:/SciKnowEval_main/results/generate_questions/test1
 result_dir: E:/SciKnowEval_main/results
 
 model: gpt-3.5-turbo
