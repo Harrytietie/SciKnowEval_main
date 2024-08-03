@@ -77,7 +77,7 @@ class CfgNode(dict):
         key_list = [] if key_list is None else key_list
         for k, v in init_dict.items():
             if type(v) is dict:
-                # Convert dict to CfgNode
+                # convert_format dict to CfgNode
                 init_dict[k] = CfgNode(v, key_list=key_list + [k])
             else:
                 # Check for valid leaf type or nested CfgNode

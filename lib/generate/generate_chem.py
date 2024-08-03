@@ -52,40 +52,78 @@ def generate_chem_questions(names: list[str], contents: list[list[str]], output_
         return questions, answers, token_num
 
     def generate_compound(contents: list[str], output_path: str) -> int:
-        sys_prompt = "Analyze the following text to determine if it mentions chemical compounds, their structures, or properties. If it does, generate a multiple-choice question that tests the understanding of the chemical compounds. The question should be formulated to highlight a specific detail or concept within the text. Provide four options (A, B, C, and D), with only one correct answer. Follow the question with the correct answer option, reflecting accurately on the content or the implications of the text. Format your response as follows: \nQuestion: [Your question here] \nA) Option A \nB) Option B \nC) Option C \nD) Option D \nAnswer: [The letter of the correct answer option]. \nEnsure that the question, the options, and the answer are clear, concise, and directly related to the text. If the text does not mentions chemical compounds, their structures, or properties, return 'False' directly. Don't return anything useless. "
+        sys_prompt = ("Analyze the following text to determine if it mentions chemical compounds, their structures, or properties. "
+                      "If it does, generate a multiple-choice question that tests the understanding of the chemical compounds. "
+                      "The question should be formulated to highlight a specific detail or concept within the text. "
+                      "Provide four options (A, B, C, and D), with only one correct answer. "
+                      "Follow the question with the correct answer option, reflecting accurately on the content or the implications of the text. "
+                      "Format your response as follows: \n"
+                      "Question: [Your question here] \n"
+                      "A) Option A \nB) Option B \nC) Option C \nD) Option D \n"
+                      "Answer: [The letter of the correct answer option]. \n"
+                      "Ensure that the question, the options, and the answer are clear, concise, and directly related to the text. "
+                      "If the text does not mentions chemical compounds, their structures, or properties, return 'False' directly. "
+                      "Don't return anything useless. ")
         questions, answers, token_num = gpt_connect(sys_prompt, contents)
 
         questions_jsonl = [{
             "input": [
                 {"role": "system",
-                 "content": "Please read the text carefully and choose the correct answer from the multiple-choice options based on your understanding of the details or data described. \nOnly write the answer down."},
+                 "content": "Please read the text carefully and choose the correct answer from the multiple-choice options "
+                            "based on your understanding of the details or data described. \n"
+                            "Only write the answer down."},
                 {"role": "user", "content": question}
             ],
             "answer": answer} for question, answer in zip(questions, answers)]
         write_jsonl(output_path, questions_jsonl)
         return token_num
+
     def generate_reaction(contents: list[str], output_path: str) -> int:
-        sys_prompt = "Analyze the following text to determine if it describes a chemical reaction, its equation, or reaction mechanism. If it does, generate a multiple-choice question based on that information. The question should be formulated to highlight a specific detail or concept within the text. Provide four options (A, B, C, and D), with only one correct answer. Follow the question with the correct answer option, reflecting accurately on the content or the implications of the text. Format your response as follows: \nQuestion: [Your question here] \nA) Option A \nB) Option B \nC) Option C \nD) Option D \nAnswer: [The letter of the correct answer option]. \nEnsure that the question, the options, and the answer are clear, concise, and directly related to the text. If the text does not mentions a chemical reaction, its equation, or reaction mechanism, return 'False' directly. Don't return anything useless. "
+        sys_prompt = ("Analyze the following text to determine if it describes a chemical reaction, its equation, or reaction mechanism. "
+                      "If it does, generate a multiple-choice question based on that information. "
+                      "The question should be formulated to highlight a specific detail or concept within the text. "
+                      "Provide four options (A, B, C, and D), with only one correct answer. "
+                      "Follow the question with the correct answer option, reflecting accurately on the content or the implications of the text. "
+                      "Format your response as follows: \nQuestion: [Your question here] \n"
+                      "A) Option A \nB) Option B \nC) Option C \nD) Option D \n"
+                      "Answer: [The letter of the correct answer option]. \n"
+                      "Ensure that the question, the options, and the answer are clear, concise, and directly related to the text. "
+                      "If the text does not mentions a chemical reaction, its equation, or reaction mechanism, return 'False' directly. "
+                      "Don't return anything useless. ")
         questions, answers, token_num = gpt_connect(sys_prompt, contents)
 
         questions_jsonl = [{
             "input": [
                 {"role": "system",
-                 "content": "Please read the text carefully and choose the correct answer from the multiple-choice options based on your understanding of the details or data described. \nOnly write the answer down."},
+                 "content": "Please read the text carefully and choose the correct answer from the multiple-choice options "
+                            "based on your understanding of the details or data described. \n"
+                            "Only write the answer down."},
                 {"role": "user", "content": question}
             ],
             "answer": answer} for question, answer in zip(questions, answers)]
         write_jsonl(output_path, questions_jsonl)
         return token_num
+
     def generate_cation(contents: list[str], output_path: str) -> int:
-        sys_prompt = "Analyze the following text to determine if it mentions the qualitative analysis of common cations. If it does, generate a multiple-choice question based on that information related to the specific cations and types of reactions mentioned. Provide four options (A, B, C, and D), with only one correct answer. Follow the question with the correct answer option, reflecting accurately on the content or the implications of the text. Format your response as follows: \nQuestion: [Your question here] \nA) Option A \nB) Option B \nC) Option C \nD) Option D \nAnswer: [The letter of the correct answer option]. \nEnsure that the question, the options, and the answer are clear, concise, and directly related to the text. If the text does not mentions the qualitative analysis of common cations, return 'False' directly. Don't return anything useless. "
+        sys_prompt = ("Analyze the following text to determine if it mentions the qualitative analysis of common cations. "
+                      "If it does, generate a multiple-choice question based on that information related to the specific cations and types of reactions mentioned. "
+                      "Provide four options (A, B, C, and D), with only one correct answer. "
+                      "Follow the question with the correct answer option, reflecting accurately on the content or the implications of the text. "
+                      "Format your response as follows: \nQuestion: [Your question here] \n"
+                      "A) Option A \nB) Option B \nC) Option C \nD) Option D \n"
+                      "Answer: [The letter of the correct answer option]. \n"
+                      "Ensure that the question, the options, and the answer are clear, concise, and directly related to the text. "
+                      "If the text does not mentions the qualitative analysis of common cations, return 'False' directly. "
+                      "Don't return anything useless. ")
 
         questions, answers, token_num = gpt_connect(sys_prompt, contents)
 
         questions_jsonl = [{
             "input": [
                 {"role": "system",
-                 "content": "Please read the text carefully and choose the correct answer from the multiple-choice options based on your understanding of the details or data described. \nOnly write the answer down."},
+                 "content": "Please read the text carefully and choose the correct answer from the multiple-choice options "
+                            "based on your understanding of the details or data described. \n"
+                            "Only write the answer down."},
                 {"role": "user", "content": question}
             ],
             "answer": answer} for question, answer in zip(questions, answers)]

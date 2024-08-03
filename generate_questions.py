@@ -1,7 +1,9 @@
 import os
 
 from lib.config import cfg
-from lib.generate.generate_base import generate_base_questions
+from lib.generate.L2_generate_base import generate_base_questions
+from lib.generate.L2_generate_med import generate_med_questions
+from lib.generate.L4_generate_safety import generate_safety_questions
 # from lib.generate.generate_biology import generate_biology_questions
 # from lib.generate.generate_chem import generate_chem_questions
 from lib.utils.json_utils import read_jsonl, read_in_folder
@@ -18,9 +20,17 @@ if __name__ == '__main__':
     contents_take = [
         value["prompt"] for value in contents_flat_jsonl
     ]
-    base_path = os.path.join(cfg.result_dir, "Base")
-    token_num += generate_base_questions(contents_take, base_path)
-    print("Token num for base questions: ", token_num)
+    # base_path = os.path.join(cfg.result_dir, "Base")
+    # token_num += generate_base_questions(contents_take, base_path)
+    # print("Token num for base questions: ", token_num)
+
+    med_path = os.path.join(cfg.result_dir, "med")
+    token_num += generate_med_questions(contents_take, med_path)
+    print("Token num for med questions: ", token_num)
+
+    #safety_path = os.path.join(cfg.result_dir, 'Safety')
+    #oken_num += generate_safety_questions(contents_take, safety_path)
+    #print("Token num for safety questions: ", token_num)
 
     # chem_path = os.path.join(cfg.result_dir, "Chemistry")
     # contents_chem = [
@@ -32,7 +42,7 @@ if __name__ == '__main__':
     # print("Token num for chemistry questions: ", token_num)
 
 # V2
-    #for contents_jsonl in contents_flat:
+    # for contents_jsonl in contents_flat:
     #     print("text_name", text_name)
     #     base_path = os.path.join(cfg.result_dir, "Base")
     #     contents_take = [

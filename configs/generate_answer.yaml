@@ -1,9 +1,9 @@
 task: generate_answer
 gpus: [0]
-exp_name: 'gpt-3.5-turbo-test1'
+exp_name: 'gpt-4-turbo-preview'
 
-data_dir:  E:/SciKnowEval_main/results/generate_questions/test1
+data_dir:  E:/SciKnowEval_main/results/generate_questions/medical
 result_dir: E:/SciKnowEval_main/results
 
-model: gpt-3.5-turbo
+model: gpt-4-turbo-preview
 api_base: https://api.ai-gaochao.cn/v1

@@ -1,6 +1,6 @@
 task: extract_pdfs
 gpus: [0]
-exp_name: 'pypdf1'
+exp_name: 'pypdf2(1)'
 
-data_dir:  E:/SciKnowEval_main/data/pdfs
+data_dir:  E:/SciKnowEval_main/data/pdfs(1)
 result_dir: E:/SciKnowEval_main/results

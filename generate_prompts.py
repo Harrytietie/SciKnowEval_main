@@ -27,4 +27,3 @@ if __name__ == '__main__':
             } for content in contents
         ]
         write_jsonl(output_path, contents_jsonl)
-

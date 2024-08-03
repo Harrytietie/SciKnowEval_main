@@ -1,11 +1,11 @@
 task: generate_prompts
 gpus: [0]
-exp_name: 'test1'
+exp_name: 'L2_med'
 
 result_dir: E:/SciKnowEval_main/results
-text_dir: E:/SciKnowEval_main/results/extract_pdfs/pypdf1
+text_dir: E:/SciKnowEval_main/results/extract_pdfs/pypdf2
 
-model: gpt-3.5-turbo
+model: gpt-4o-mini
 api_base: https://api.ai-gaochao.cn/v1
 max_tokens: 4096
 temperature: 0.7

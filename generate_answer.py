@@ -16,6 +16,7 @@ def generate_answer(result_folder, question_folder, model, api_base, file_name=N
     else:
         generate_without_pdf(result_folder, question_folder, model, api_base)
 
+
 if __name__ == '__main__':
     if not os.path.exists(cfg.result_dir):
         os.makedirs(cfg.result_dir)

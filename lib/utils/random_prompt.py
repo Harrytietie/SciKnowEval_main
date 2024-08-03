@@ -9,7 +9,8 @@ import random
 import time
 import asyncio
 
-def get_prompt(text_path: str, num: int, length: int, pdf_path: str, add_page_num: bool = False):
+
+def get_prompt(text_path: str, num: int, length: int, pdf_path: str = None, add_page_num: bool = False):
     """
     Extracts text from a PDF file and returns a random prompt.
     Args:
@@ -25,7 +26,7 @@ def get_prompt(text_path: str, num: int, length: int, pdf_path: str, add_page_nu
     """
     # chat_fn = OpenAIChatCompletionFnWithPDF(
     #     model=cfg.model,
-    #     api_base=cfg.api_base,
+    #     api_base=cfg.api_base
     # )
     chat = OpenAIChat(model_name=cfg.model, max_tokens=cfg.max_tokens, temperature=cfg.temperature, top_p=cfg.top_p)
 
@@ -39,7 +40,39 @@ def get_prompt(text_path: str, num: int, length: int, pdf_path: str, add_page_nu
     messages = []
     token_num = 0
     text = "".join(texts)
-    sys_prompt = "Analyze the following text to determine if it contains useful knowledge or information. If it does, reorganize the information into a coherent and logically structured paragraph, maintaining the original meaning of the text, and directly return the coherent and logically structured paragraph. Don't return anything useless. If the text does not contain useful knowledge or information, return 'False'."
+    # L2
+
+    sys_prompt = (
+        "Analyze the following text to determine if it contains useful knowledge or information about medical science. "
+        "If it does, reorganize the information into a coherent and logically structured paragraph, "
+        "maintaining the original meaning of the text, and directly return the coherent and logically structured paragraph. "
+        "Exclude any irrelevant or unnecessary information. " 
+        "If the text does not contain useful knowledge or information, return 'False'."
+    )
+
+    # L4_toxicity
+    '''
+    sys_prompt = (
+        "Analyze the following text to determine if it contains useful knowledge or information specially related to toxicity in the field of medical science, "
+        "such as molecular toxicity or proteotoxicity. "
+        "If it does, reorganize the information into a coherent and logically structured paragraph, "
+        "maintaining the original meaning of the text, and directly return the coherent and logically structured paragraph. "
+        "Exclude any irrelevant or unnecessary information. "
+        "If the text does not contain useful knowledge or information, return 'False'."
+    )
+    '''
+    # L4_ethic
+    '''
+    sys_prompt = (
+        "Analyze the following text to determine if it contains useful knowledge or information specially related to ethic in the field of medical science, "
+        "such as certain medical treatments contrary to social morality or human cognition. "
+        "If it does, reorganize the information into a coherent and logically structured paragraph, "
+        "maintaining the original meaning of the text, and directly return the coherent and logically structured paragraph. "
+        "Exclude any irrelevant or unnecessary information. "
+        "If the text does not contain useful knowledge or information, return 'False'."
+    )
+    '''
+
     sys_token = calculate_num_tokens(sys_prompt)
 
     # 以length为长度，遍历所有text，提取出所有文本
@@ -60,10 +93,17 @@ def get_prompt(text_path: str, num: int, length: int, pdf_path: str, add_page_nu
     batch_size = cfg.api_batch
     total_len = range(0, len(messages), batch_size)
     for index in tqdm(total_len, total=len(total_len)):
-        responses_index = asyncio.run(chat.async_run(
+
+        loop = asyncio.get_event_loop()
+        responses_index = loop.run_until_complete(chat.async_run(
             messages_list=messages[index:index + batch_size],
             expected_type=List
         ))
+
+        #responses_index = asyncio.run(chat.async_run(
+        #    messages_list=messages[index:index + batch_size],
+        #    expected_type=List
+        #))
 
         for i in range(len(responses_index)):
             try:

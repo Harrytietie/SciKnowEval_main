@@ -1,12 +1,12 @@
 task: generate_questions
 gpus: [0]
-exp_name: 'test1'
+exp_name: 'L2'
 
 #data_dir:  E:/SciKnowEval-main/data/pdfs
 result_dir: E:/SciKnowEval_main/results
-text_dir: E:/SciKnowEval_main/results/generate_prompts/test1
+text_dir: E:/SciKnowEval_main/results/generate_prompts/L2_med
 
-model: gpt-3.5-turbo
+model: gpt-4o-mini
 api_base: https://api.ai-gaochao.cn/v1
 max_tokens: 4096
 temperature: 0.7
@@ -16,16 +16,25 @@ api_batch: 100
 num: 10
 length: 1000
 
-base:
-  detailed: 5
-  hypothesis: 5
-  reasoning: 5
-  summary: 5
+#base:
+#  detailed: 748
+#  hypothesis: 833
+#  reasoning: 833
+#  summary: 833
 
-chem:
-  compound: 700
-  reaction: 700
-  cation: 30
-  naming: 20
+med:
+  drug: 0
+  therapy: 0
+  preparation: 800
 
-#bio:
+#safety:
+#  security_mcq: 400
+#  security_judge: 400
+#  ethic_mcq: 0
+#  ethic_judge: 0
+
+#chem:
+#  compound: 700
+#  reaction: 700
+#  cation: 30
+#  naming: 20

@@ -2,10 +2,10 @@
 
 import os
 
-import httpx
+#import httpx
 import openai
 from openai import OpenAI
-import ast
+#import ast
 import asyncio
 from openai import AsyncOpenAI
 from typing import List, Tuple, Any
@@ -13,7 +13,7 @@ import tiktoken
 from tqdm import tqdm
 
 
-class OpenAIChat():
+class OpenAIChat:
     # more details on: https://platform.openai.com/docs/api-reference/chat
     def __init__(
             self,
@@ -43,16 +43,16 @@ class OpenAIChat():
         if "gpt" in model_name or 'embedding' in model_name:
             # openai.api_key = os.getenv("OPENAI_API_KEY")
             self.client = OpenAI(
-                api_key = os.environ['OPENAI_API_KEY'],
-                base_url = "https://api.ai-gaochao.cn/v1"
+                #api_key=os.environ['OPENAI_API_KEY'],
+                api_key="sk-KmLopBhOMFbaWEWK983e254826114f9fB9E4C974568224D3",
+                base_url="https://api.ai-gaochao.cn/v1"
             )
         else:
             # openai.api_key = "EMPTY"
             self.client = OpenAI(
-                api_key = "EMPTY",
-                base_url = "http://127.0.0.1:8333/v1"
+                api_key="EMPTY",
+                base_url="http://127.0.0.1:8333/v1"
             )
-
 
     async def dispatch_openai_requests(
             self,
@@ -68,21 +68,22 @@ class OpenAIChat():
         async def _request_with_retry(messages, retry=3):
             client = AsyncOpenAI(
                 base_url="https://api.ai-gaochao.cn/v1",  # 替换为你的 base_url
-                api_key=os.environ.get("OPENAI_API_KEY")  # 替换为你的 API 密钥
+                #api_key=os.environ.get("OPENAI_API_KEY")  # 替换为你的 API 密钥
+                api_key="sk-KmLopBhOMFbaWEWK983e254826114f9fB9E4C974568224D3"
             )
             for try_i in range(retry):
                 try:
                     # for text embedding models
                     if "embedding" in self.config['model_name']:
                         response = await client.embeddings.create(
-                        #response = await openai.Embedding.acreate(
+                        # response = await openai.Embedding.acreate(
                             model=self.config['model_name'],
                             input=messages,
                         )
                     else:
                         # for chat models
                         response = await client.chat.completions.create(
-                        #response = await openai.ChatCompletion.acreate(
+                        # response = await openai.ChatCompletion.acreate(
                             model=self.config['model_name'],
                             response_format={'type': self.config['response_format']},
                             messages=messages,
@@ -98,34 +99,34 @@ class OpenAIChat():
                     return response
 
                 except openai.BadRequestError as e:
-                #except openai.error.InvalidRequestError as e:
+                # except openai.error.InvalidRequestError as e:
                     print(e)
                     print(f'Retry {try_i + 1} Bad request error, waiting for 3 second...')
                     await asyncio.sleep(3)
                 except openai.RateLimitError:
-                #except openai.error.RateLimitError:
+                # except openai.error.RateLimitError:
                     print(f'Retry {try_i + 1} Rate limit error, waiting for 40 second...')
                     await asyncio.sleep(40)
                 except openai.APITimeoutError:
-                #except openai.error.Timeout:
+                # except openai.error.Timeout:
                     print(f'Retry {try_i + 1} Timeout error, waiting for 10 second...')
                     await asyncio.sleep(10)
                 except openai.APIConnectionError as e:
-                #except openai.error.APIConnectionError as e:
+                # except openai.error.APIConnectionError as e:
                     print(e)
                     print(f'Retry {try_i + 1} API connection error, waiting for 10 second...')
                     await asyncio.sleep(10)
                 except openai.APIError:
-                #except openai.error.APIError:
+                # except openai.error.APIError:
                     print(f'Retry {try_i + 1} API error, waiting for 5 second...')
                     await asyncio.sleep(5)
                 except openai.AuthenticationError as e:
-                #except openai.error.AuthenticationError as e:
+                # except openai.error.AuthenticationError as e:
                     print(e)
                     print(f'Retry {try_i + 1} Authentication error, waiting for 10 second...')
                     await asyncio.sleep(10)
                 except openai.InternalServerError:
-                #except openai.error.ServiceUnavailableError:
+                # except openai.error.ServiceUnavailableError:
                     print(f'Retry {try_i + 1} Service unavailable error, waiting for 3 second...')
                     await asyncio.sleep(3)
             return None
@@ -151,13 +152,13 @@ class OpenAIChat():
             )
 
             if "embedding" in self.config['model_name']:
-                #preds = [prediction['data'][0]['embedding'] if prediction is not None else None for prediction in
+                # preds = [prediction['data'][0]['embedding'] if prediction is not None else None for prediction in
                 #         predictions]
                 preds = [prediction.data[0].embedding if prediction is not None else None for prediction in
                          predictions]
             else:
                 if self.config['logprobs'] == False:
-                    #preds = [prediction['choices'][0]['message']['content'] if prediction is not None else None for
+                    # preds = [prediction['choices'][0]['message']['content'] if prediction is not None else None for
                     #         prediction in predictions]
                     preds = [prediction.choices[0].message.content if prediction is not None else None for
                              prediction in predictions]
